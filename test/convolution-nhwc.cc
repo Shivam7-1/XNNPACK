@@ -10,6 +10,8 @@
 
 #include "convolution-operator-tester.h"
 
+#include <xnnpack/common.h>
+#include <xnnpack/isa-checks.h>
 
 TEST(CONVOLUTION_NHWC_Q8, 1x1) {
   ConvolutionOperatorTester()
@@ -2759,3 +2761,1758 @@ TEST(CONVOLUTION_NHWC_F32, setup_swap_height_and_width_depthwise) {
     .group_output_channels(1)
     .TestSetupNHWCxF32();
 }
+
+#if XNN_ARCH_ARM64
+TEST(CONVOLUTION_NHWC_F16, 1x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(27, 29)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x1_with_qmin) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(27, 29)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .qmin(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x1_with_qmax) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(27, 29)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .qmax(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x1_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(27, 29)
+    .kernel_size(1, 1)
+    .input_pixel_stride(28)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x1_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(27, 29)
+    .kernel_size(1, 1)
+    .output_pixel_stride(29)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x1_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(13, 14)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x1_with_batch) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_size(13, 14)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1_with_qmin) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .qmin(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1_with_qmax) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .qmax(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .input_pixel_stride(37)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .output_pixel_stride(41)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x1_with_batch) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_size(24, 25)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_1x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_1x1_with_qmin) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .qmin(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_1x1_with_qmax) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .qmax(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_1x1_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .input_pixel_stride(28)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_1x1_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .output_pixel_stride(29)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_1x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_1x1_with_qmin) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .qmin(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_1x1_with_qmax) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .qmax(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_1x1_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .groups(2)
+    .input_pixel_stride(37)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_1x1_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(1, 1)
+    .kernel_size(1, 1)
+    .groups(2)
+    .output_pixel_stride(41)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 1x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(20, 19)
+    .padding_width(1)
+    .kernel_size(1, 3)
+    .group_input_channels(17)
+    .group_output_channels(15)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_1x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(20, 19)
+    .padding_width(1)
+    .kernel_size(1, 3)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(15)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(19, 20)
+    .padding_height(1)
+    .kernel_size(3, 1)
+    .group_input_channels(17)
+    .group_output_channels(15)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(19, 20)
+    .padding_height(1)
+    .kernel_size(3, 1)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(15)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_without_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_left_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding_left(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_right_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding_right(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_top_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding_top(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_bottom_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding_bottom(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding(1)
+    .kernel_size(3, 3)
+    .input_pixel_stride(22)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .padding(1)
+    .kernel_size(3, 3)
+    .output_pixel_stride(23)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(10, 9)
+    .padding(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3_with_batch) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_size(10, 9)
+    .padding(1)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_without_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 12)
+    .kernel_size(3, 3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_left_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding_left(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_right_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding_right(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_top_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding_top(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_bottom_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding_bottom(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .input_pixel_stride(29)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(10, 11)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .output_pixel_stride(31)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(10, 11)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, grouped_3x3_with_batch) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_size(10, 11)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(14)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3s2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(14, 13)
+    .padding(1)
+    .kernel_size(3, 3)
+    .subsampling(2)
+    .group_input_channels(27)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3s2_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 13; input_height <= 14; input_height++) {
+    for (size_t input_width = 13; input_width <= 14; input_width++) {
+      ConvolutionOperatorTester()
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .subsampling(2)
+        .group_input_channels(27)
+        .group_output_channels(19)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3s1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(14, 13)
+    .padding(1)
+    .kernel_size(3, 3)
+    .subsampling(1, 2)
+    .group_input_channels(27)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3s1x2_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 13; input_height <= 14; input_height++) {
+    for (size_t input_width = 13; input_width <= 14; input_width++) {
+      ConvolutionOperatorTester()
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .subsampling(1, 2)
+        .group_input_channels(27)
+        .group_output_channels(19)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3s2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(14, 13)
+    .padding(1)
+    .kernel_size(3, 3)
+    .subsampling(2, 1)
+    .group_input_channels(27)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3s2x1_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 13; input_height <= 14; input_height++) {
+    for (size_t input_width = 13; input_width <= 14; input_width++) {
+      ConvolutionOperatorTester()
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .subsampling(2, 1)
+        .group_input_channels(27)
+        .group_output_channels(19)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3d2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(13, 14)
+    .padding(2)
+    .kernel_size(3, 3)
+    .dilation(2)
+    .group_input_channels(27)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3d1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(14, 15)
+    .padding(1, 2)
+    .kernel_size(3, 3)
+    .dilation(1, 2)
+    .group_input_channels(27)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, 3x3d2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 1)
+    .kernel_size(3, 3)
+    .dilation(2, 1)
+    .group_input_channels(27)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_3x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_3x3_with_qmin) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .qmin(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_3x3_with_qmax) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .qmax(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_3x3_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .input_pixel_stride(28)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_3x3_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .output_pixel_stride(29)
+    .group_input_channels(23)
+    .group_output_channels(19)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_3x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_3x3_with_qmin) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .qmin(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_3x3_with_qmax) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .qmax(128)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_3x3_with_input_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .input_pixel_stride(37)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, unioutput_grouped_3x3_with_output_stride) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(3, 3)
+    .padding(1)
+    .kernel_size(3, 3)
+    .groups(2)
+    .output_pixel_stride(41)
+    .group_input_channels(17)
+    .group_output_channels(13)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_1x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .kernel_size(1, 1)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_1x1_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(15, 14)
+    .kernel_size(1, 1)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2s2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .subsampling(2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2s1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .subsampling(1, 2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2s2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .subsampling(2, 1)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2d2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .dilation(2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2d1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .dilation(1, 2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_2x2d2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .dilation(2, 1)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3s2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .subsampling(2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3s2_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 14; input_height <= 15; input_height++) {
+    for (size_t input_width = 14; input_width <= 15; input_width++) {
+      ConvolutionOperatorTester()
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .subsampling(2)
+        .groups(27)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3s1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .subsampling(1, 2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3s1x2_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 14; input_height <= 15; input_height++) {
+    for (size_t input_width = 14; input_width <= 15; input_width++) {
+      ConvolutionOperatorTester()
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .subsampling(1, 2)
+        .groups(27)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3s2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .subsampling(2, 1)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3s2x1_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 14; input_height <= 15; input_height++) {
+    for (size_t input_width = 14; input_width <= 15; input_width++) {
+      ConvolutionOperatorTester()
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .subsampling(2, 1)
+        .groups(27)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3d2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .dilation(2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3d1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .dilation(1, 2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_3x3d2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .dilation(2, 1)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5s2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .subsampling(2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5s1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .subsampling(1, 2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5s2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .subsampling(2, 1)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5d2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .dilation(2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5d1x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .dilation(1, 2)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, depthwise_5x5d2x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .dilation(2, 1)
+    .groups(27)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 1x1) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .kernel_size(1, 1)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 1x1_with_depth_multiplier) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .kernel_size(1, 1)
+    .groups(24)
+    .group_output_channels(3)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 1x1_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .has_bias(false)
+    .input_size(15, 14)
+    .kernel_size(1, 1)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 2x2) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 2x2_with_depth_multiplier) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .groups(24)
+    .group_output_channels(3)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 2x2_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(2, 2)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 3x3) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 3x3_with_depth_multiplier) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .groups(24)
+    .group_output_channels(3)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 3x3_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(1, 1)
+    .kernel_size(3, 3)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 3x3s2_with_tf_same_padding) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  for (size_t input_height = 14; input_height <= 15; input_height++) {
+    for (size_t input_width = 14; input_width <= 15; input_width++) {
+      ConvolutionOperatorTester()
+        .depthwise_layout(true)
+        .input_size(input_height, input_width)
+        .padding_tf_same(true)
+        .kernel_size(3, 3)
+        .groups(24)
+        .iterations(3)
+        .TestNHWCxF16();
+    }
+  }
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 5x5) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 5x5_with_depth_multiplier) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .groups(24)
+    .group_output_channels(3)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 5x5_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(2, 2)
+    .kernel_size(5, 5)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 7x7) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .input_size(15, 14)
+    .padding(3, 3)
+    .kernel_size(7, 7)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(DEPTHWISE_CONVOLUTION_NHWC_F16, 7x7_without_bias) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ConvolutionOperatorTester()
+    .depthwise_layout(true)
+    .has_bias(false)
+    .input_size(15, 14)
+    .padding(3, 3)
+    .kernel_size(7, 7)
+    .groups(24)
+    .iterations(3)
+    .TestNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_input_buffer) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_input_buffer_grouped) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_input_buffer_depthwise) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_increasing_batch) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .next_batch_size(5)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_increasing_batch_grouped) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .next_batch_size(5)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_increasing_batch_depthwise) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .next_batch_size(5)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_decreasing_batch) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(5)
+    .next_batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_decreasing_batch_grouped) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(5)
+    .next_batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_decreasing_batch_depthwise) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(5)
+    .next_batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_height) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_height(9)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_height(7)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_height_grouped) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_height(9)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_height(7)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_height_depthwise) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_height(9)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_height(7)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_width) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_width(9)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_width(7)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_width_grouped) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_width(9)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_width(7)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_changing_width_depthwise) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_width(9)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(8)
+    .input_width(8)
+    .next_input_width(7)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_swap_height_and_width) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(9)
+    .input_width(8)
+    .next_input_height(8)
+    .next_input_width(9)
+    .kernel_height(5)
+    .kernel_width(3)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_swap_height_and_width_grouped) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(9)
+    .input_width(8)
+    .next_input_height(8)
+    .next_input_width(9)
+    .kernel_height(5)
+    .kernel_width(3)
+    .groups(2)
+    .group_input_channels(15)
+    .group_output_channels(17)
+    .TestSetupNHWCxF16();
+}
+
+TEST(CONVOLUTION_NHWC_F16, setup_swap_height_and_width_depthwise) {
+  TEST_REQUIRES_ARM_NEON_FP16_ARITH;
+  ASSERT_EQ(xnn_status_success, xnn_initialize(nullptr /* allocator */));
+  ConvolutionOperatorTester()
+    .batch_size(3)
+    .input_height(9)
+    .input_width(8)
+    .next_input_height(8)
+    .next_input_width(9)
+    .kernel_height(3)
+    .kernel_width(3)
+    .groups(19)
+    .group_input_channels(1)
+    .group_output_channels(1)
+    .TestSetupNHWCxF16();
+}
+#endif  // XNN_ARCH_ARM64
